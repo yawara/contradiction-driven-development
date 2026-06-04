@@ -12,13 +12,13 @@ AIが無限に生成する時代に、人間の有限な判断を「矛盾が露
 
 ## 構成
 
-| ファイル | 役割 |
-|---|---|
-| [essay.md](essay.md) | エッセイ本文（トップページ / `permalink: /`） |
-| [_layouts/default.html](_layouts/default.html) | レイアウト・CSS・テーマソング再生ダイアログ |
-| [_config.yml](_config.yml) | Jekyll 設定（`hard_wrap` など） |
-| [contradiction.mp3](contradiction.mp3) | テーマソング（BGM） |
-| [.github/workflows/jekyll-gh-pages.yml](.github/workflows/jekyll-gh-pages.yml) | ビルド & デプロイ |
+| ファイル                                                                       | 役割                                          |
+| ------------------------------------------------------------------------------ | --------------------------------------------- |
+| [essay.md](essay.md)                                                           | エッセイ本文（トップページ / `permalink: /`） |
+| [\_layouts/default.html](_layouts/default.html)                                | レイアウト・CSS・テーマソング再生ダイアログ   |
+| [\_config.yml](_config.yml)                                                    | Jekyll 設定（`hard_wrap` など）               |
+| [contradiction.mp3](contradiction.mp3)                                         | テーマソング（BGM）                           |
+| [.github/workflows/jekyll-gh-pages.yml](.github/workflows/jekyll-gh-pages.yml) | ビルド & デプロイ                             |
 
 ## 公開の仕組み
 
