@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'ja' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="{{ page.title | default: site.title }}">
+  <meta property="og:description" content="{{ page.description | default: site.description }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --bg: #16161a;
+      --fg: #e6e4df;
+      --muted: #9b968c;
+      --rule: #2b2b31;
+      --accent: #cda472;
+      --on-accent: #16161a;
+      --measure: 42rem;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+        "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "YuGothic",
+        "Noto Sans JP", Meiryo, sans-serif;
+      font-size: 17px;
+      line-height: 1.95;
+      font-feature-settings: "palt";
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .essay {
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 6.5rem 1.5rem 3rem;
+    }
+    .essay h1 {
+      font-size: 1.95rem;
+      line-height: 1.5;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin: 0 0 0.7rem;
+    }
+    .essay h1 + h2 {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      margin: 0 0 3.5rem;
+      padding-bottom: 2.4rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .essay p {
+      margin: 0 0 1.65rem;
+      text-align: justify;
+      line-break: strict;
+      overflow-wrap: break-word;
+    }
+    .essay strong { font-weight: 700; }
+    .essay em { font-style: normal; font-weight: 700; }
+    .essay a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1px;
+    }
+    .site-footer {
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+    .site-footer a { color: var(--muted); }
+
+    /* --- Background music: consent dialog + mini player --- */
+    .bgm-modal {
+      position: fixed; inset: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      background: rgba(8, 8, 10, 0.55);
+      -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    }
+    .bgm-modal.is-hidden { display: none; }
+    html:has(.bgm-modal:not(.is-hidden)) { overflow: hidden; }
+    .bgm-modal__card {
+      background: var(--bg); color: var(--fg);
+      border: 1px solid var(--rule); border-radius: 14px;
+      max-width: 22rem; width: 100%;
+      padding: 1.7rem 1.5rem 1.4rem;
+      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    .bgm-modal__title { margin: 0 0 0.5rem; font-size: 1.05rem; font-weight: 700; line-height: 1.6; }
+    .bgm-modal__desc { margin: 0 0 1.4rem; font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+    .bgm-modal__actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+    .bgm-btn {
+      font: inherit; font-size: 0.9rem; cursor: pointer;
+      padding: 0.55rem 1.15rem; border-radius: 999px;
+      border: 1px solid var(--rule); background: transparent; color: var(--fg);
+      transition: opacity 0.15s ease;
+    }
+    .bgm-btn:hover { opacity: 0.75; }
+    .bgm-btn--primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+
+    .bgm-player {
+      position: fixed; right: 1rem; bottom: 1rem; z-index: 40;
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.4rem 0.95rem 0.4rem 0.4rem;
+      background: var(--bg); border: 1px solid var(--rule); border-radius: 999px;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
+      font-size: 0.8rem; color: var(--muted); max-width: 72vw;
+    }
+    .bgm-player[hidden] { display: none; }
+    .bgm-toggle {
+      flex: none; width: 2rem; height: 2rem; border-radius: 50%;
+      border: none; cursor: pointer; background: var(--accent); color: var(--on-accent);
+      display: inline-flex; align-items: center; justify-content: center; padding: 0;
+    }
+    .bgm-toggle svg { width: 0.95rem; height: 0.95rem; fill: currentColor; display: block; }
+    .bgm-toggle .ic-pause { display: none; }
+    .bgm-player.is-playing .ic-play { display: none; }
+    .bgm-player.is-playing .ic-pause { display: block; }
+    .bgm-player__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; line-height: 1.9; }
+      .essay { padding: 3.5rem 1.25rem 2rem; }
+      .essay h1 { font-size: 1.55rem; }
+      .essay h1 + h2 { margin-bottom: 2.6rem; padding-bottom: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background music: consent dialog + mini player -->
+  <div id="bgm-modal" class="bgm-modal" role="dialog" aria-modal="true" aria-labelledby="bgm-title">
+    <div class="bgm-modal__card">
+      <p class="bgm-modal__title" id="bgm-title">テーマソングを再生しますか？</p>
+      <p class="bgm-modal__desc">BGM としてループ再生します。</p>
+      <div class="bgm-modal__actions">
+        <button type="button" class="bgm-btn bgm-btn--primary" id="bgm-yes" autofocus>再生する</button>
+        <button type="button" class="bgm-btn" id="bgm-no">再生しない</button>
+      </div>
+    </div>
+  </div>
+  <div id="bgm-player" class="bgm-player" hidden>
+    <button type="button" id="bgm-toggle" class="bgm-toggle" aria-label="再生 / 一時停止">
+      <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+      <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"></path></svg>
+    </button>
+    <span class="bgm-player__title">テーマソング</span>
+  </div>
+  <audio id="bgm-audio" src="contradiction.mp3" loop preload="none"></audio>
+
+  <main class="essay">
+    {{ content }}
+  </main>
+  <footer class="site-footer">
+    矛盾駆動開発 — Contradiction-Driven Development<br>
+    <a href="https://github.com/yawara/contradiction-driven-development">View source on GitHub</a>
+  </footer>
+  <script>
+    (function () {
+      var audio  = document.getElementById('bgm-audio');
+      var modal  = document.getElementById('bgm-modal');
+      var player = document.getElementById('bgm-player');
+      var toggle = document.getElementById('bgm-toggle');
+      if (!audio || !modal || !player || !toggle) return;
+
+      function sync()    { player.classList.toggle('is-playing', !audio.paused); }
+      function dismiss() { modal.classList.add('is-hidden'); player.hidden = false; }
+
+      document.getElementById('bgm-yes').addEventListener('click', function () {
+        dismiss();
+        audio.play().catch(function () {});
+      });
+      document.getElementById('bgm-no').addEventListener('click', dismiss);
+
+      toggle.addEventListener('click', function () {
+        if (audio.paused) audio.play().catch(function () {}); else audio.pause();
+      });
+
+      audio.addEventListener('play', sync);
+      audio.addEventListener('pause', sync);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.classList.contains('is-hidden')) dismiss();
+      });
+    })();
+  </script>
+</body>
+</html>

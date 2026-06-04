@@ -1,0 +1,17 @@
+title: 矛盾が露出した境界だけを裁く
+description: AI slop の時代における矛盾駆動開発の提唱
+lang: ja
+
+# Markdown 設定:
+# essay.md は連続した行を「改行のまま」見せたい箇所（詩的なスタンザ）が多いため
+# hard_wrap を有効にして soft line break を <br> として描画する。
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: true
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
