@@ -8,7 +8,7 @@ AIが無限に生成する時代に、人間の有限な判断を「矛盾が露
 
 ## 概要
 
-教皇レオ14世のAI発言、Linus Torvalds の態度、arXiv の endorsement 制約を補助線に、要求・実装・テスト・設計・人間の意図のあいだに現れる「矛盾」を介入点として捉える開発手法 **Contradiction-Driven Development (CDD)** を定式化する。
+教皇レオ14世のAI発言、Linus Torvalds の態度、ライデン宣言（AIと数学に関する声明）、arXiv の endorsement 制約を補助線に、要求・実装・テスト・設計・人間の意図のあいだに現れる「矛盾」を介入点として捉える開発手法 **Contradiction-Driven Development (CDD)** を定式化する。本稿は **v2** にあたり、ライデン宣言を新たな補助線として加えた（v1 は Git 履歴に残る）。
 
 ## 構成
 
